@@ -1,17 +1,19 @@
 class Solution:
     def firstMissingPositive(self, nums: list[int]) -> int:
         n = len(nums)
+        i = 0
         
-        # Step 1: Har valid number x (1 <= x <= n) ko uske correct index (x - 1) par bhejo
-        for i in range(n):
-            while 1 <= nums[i] <= n and nums[nums[i] - 1] != nums[i]:
-                correct_idx = nums[i] - 1
-                nums[i], nums[correct_idx] = nums[correct_idx], nums[i]
+        # Step 1: Local variable 'x' use karke redundant list lookups hataye
+        while i < n:
+            x = nums[i]
+            if 1 <= x <= n and nums[x - 1] != x:
+                nums[x - 1], nums[i] = x, nums[x - 1]
+            else:
+                i += 1
         
-        # Step 2: Pehla index dhoondo jahan uska sahi number (i + 1) nahi baitha hai
-        for i in range(n):
-            if nums[i] != i + 1:
-                return i + 1
-        
-        # Step 3: Agar 1 se n tak saare numbers sahi jagah hain, toh answer n + 1 hoga
+        # Step 2: enumerate(nums, 1) C-level par 1 se counting start karta hai
+        for i, x in enumerate(nums, 1):
+            if x != i:
+                return i
+                
         return n + 1
